@@ -3,7 +3,8 @@ IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'admin@otaku.com')
     INSERT INTO Users (Name, Email, PasswordHash, Role) VALUES ('Admin Otaku', 'admin@otaku.com', '$2a$10$z/40BcNRMNEldOFfdtUdX.4IgCJ4onylQlM5GAi44TIa1KA0tm112', 'Admin');
 
 IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'budi@gmail.com')
-    INSERT INTO Users (Name, Email, PasswordHash, Role) VALUES ('Kolektor Budi', 'budi@gmail.com', '$2a$10$JYvoKZ7SgnxF35Tf80dFLu.oBGFOaWUTsGimQJvkoF0dbseukZOpa', 'Customer');
+    -- Password: hashed_pass_admin (Sama dengan admin agar mudah di-testing)
+    INSERT INTO Users (Name, Email, PasswordHash, Role) VALUES ('Kolektor Budi', 'budi@gmail.com', '$2a$10$z/40BcNRMNEldOFfdtUdX.4IgCJ4onylQlM5GAi44TIa1KA0tm112', 'Customer');
 
 -- 2. Insert Data Katalog Reguler (Products) (Hanya jika nama produk belum ada)
 IF NOT EXISTS (SELECT 1 FROM Products WHERE Name = 'Saber 1/7 Scale Figure')

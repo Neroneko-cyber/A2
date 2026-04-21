@@ -40,9 +40,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // ─── Public (Tanpa Auth) ─────────────────────────────
+                        .requestMatchers("/", "/error").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/discounts/**").permitAll()
+                        // ─── Swagger / OpenAPI ───
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // ─── Admin Only ───────────────────────────────────────
                         .requestMatchers("/api/v1/admin/**").hasRole("Admin")
                         .requestMatchers(HttpMethod.POST,   "/api/v1/products").hasRole("Admin")

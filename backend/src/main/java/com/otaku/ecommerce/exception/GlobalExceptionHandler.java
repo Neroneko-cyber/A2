@@ -49,6 +49,31 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("OTK-5001", "Layanan upload gambar sedang tidak tersedia"));
     }
 
+    // ─── Method Not Supported (Salah Method HTTP) ────────────────────────────
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMethodNotSupported(org.springframework.web.HttpRequestMethodNotSupportedException ex) {
+        String msg = "Method " + ex.getMethod() + " tidak diizinkan untuk endpoint ini. " + 
+                     (ex.getSupportedHttpMethods() != null ? "Gunakan: " + ex.getSupportedHttpMethods() : "");
+        log.warn("[HTTP-METHOD-ERROR] {}", msg);
+        return ResponseEntity.status(405)
+                .body(ApiResponse.error("OTK-4005", msg));
+    }
+
+    // ─── Resource Not Found (Rute Tidak Ada) ──────────────────────────────────
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException ex) {
+        return ResponseEntity.status(404)
+                .body(ApiResponse.error("OTK-4004", "Endpoint atau halaman tidak ditemukan: " + ex.getResourcePath()));
+    }
+
+    // ─── Bad Request (JSON Format Salah) ──────────────────────────────────────
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Object>> handleHttpMessageNotReadable(org.springframework.http.converter.HttpMessageNotReadableException ex) {
+        log.warn("[BAD-REQUEST] Format JSON tidak valid / Malformed JSON");
+        return ResponseEntity.status(400)
+                .body(ApiResponse.error("OTK-4000", "Format JSON request tidak valid. Periksa kembali struktur JSON di body Postman."));
+    }
+
     // ─── Fallback: Semua Exception Lain ──────────────────────────────────────
     // A09: Pesan internal TIDAK dikirim ke client — hanya dicatat di log server
     @ExceptionHandler(Exception.class)

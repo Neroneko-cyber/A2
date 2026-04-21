@@ -2,10 +2,10 @@
 -- Password baru: Admin123! untuk admin, Budi123! untuk customer
 -- Hash dibuat dengan BCrypt strength=12
 
-UPDATE Users SET PasswordHash = '$2a$12$2MmPQXrP59Q.J5LWrJDKxuQEHUwvDO/SInb1JCf6g4YLYAbkKbLne'
+UPDATE Users SET PasswordHash = '$2a$12$qJ1cS2JTuFtp5IcD7z8l/OKUI9fIKR/TB3XPF1Al8dV6ZxKE9puGK'
 WHERE Email = 'admin@otaku.com';
--- Hash di atas = BCrypt(Admin123!)
+-- Hash di atas = BCrypt(Password123!)
 
-UPDATE Users SET PasswordHash = '$2a$12$7Y2yODZcrgABcSJ8AMsDAeVB15HNdRQHUBbEAJVXSlhLvO69YDsaS'
+UPDATE Users SET PasswordHash = '$2a$12$qJ1cS2JTuFtp5IcD7z8l/OKUI9fIKR/TB3XPF1Al8dV6ZxKE9puGK'
 WHERE Email = 'budi@gmail.com';
--- Hash di atas = BCrypt(Budi123!)
+-- Hash di atas = BCrypt(Password123!)

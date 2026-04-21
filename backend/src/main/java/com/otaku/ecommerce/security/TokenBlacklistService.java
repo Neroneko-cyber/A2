@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TokenBlacklistService — Menyimpan Access Token yang di-logout / di-revoke ke Redis.
- * Token yang ada di Redis dianggap tidak valid meskipun signature-nya masih benar.
+ * TokenBlacklistService — Menyimpan Access Token yang di-logout / di-revoke ke
+ * Redis.
+ * Token yang ada di Redis dianggap tidak valid meskipun signature-nya masih
+ * benar.
  */
 @Service
 public class TokenBlacklistService {
@@ -52,7 +54,8 @@ public class TokenBlacklistService {
      * TTL: 24 jam (sama dengan max umur access token yang mungkin masih aktif).
      */
     public void forceLogoutUser(Integer userId) {
-        if (userId == null) return;
+        if (userId == null)
+            return;
         try {
             String key = FORCE_LOGOUT_PREFIX + userId;
             String timestamp = String.valueOf(System.currentTimeMillis());
