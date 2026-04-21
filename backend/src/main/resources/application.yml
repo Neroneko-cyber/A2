@@ -69,9 +69,9 @@ jwt:
 
 # ─── Cloudinary ──────────────────────────────────────────────────────────────
 cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME:your-cloud-name}
-  api-key: ${CLOUDINARY_API_KEY:your-api-key}
-  api-secret: ${CLOUDINARY_API_SECRET:your-api-secret}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:dvyuk3imn}
+  api-key: ${CLOUDINARY_API_KEY:221798975154623}
+  api-secret: ${CLOUDINARY_API_SECRET:xviTxyjLUXElj4YfyT55Pj-Sf1k}
   outfit-folder: otaku-ecommerce/outfit-references
   figure-folder: otaku-ecommerce/figure-references
 

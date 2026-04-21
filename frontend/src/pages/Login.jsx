@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import axiosInstance from '../api/axiosInstance';
 
 export default function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export default function Login({ setIsLoggedIn }) {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const newErrors = {};
     if (!email) newErrors.email = "Email tidak boleh kosong";
     if (!password) newErrors.password = "Password tidak boleh kosong";
@@ -20,28 +21,30 @@ export default function Login({ setIsLoggedIn }) {
       return;
     }
 
-    // Hardcoded Access
-    if (email === 'a@gmail.com' && password === '12345') {
-      setErrors({});
-      setIsLoggedIn(true);
-      navigate('/');
-      return;
-    }
+    try {
+      const response = await axiosInstance.post('/api/v1/auth/login', {
+        email,
+        password
+      });
 
-    // Mock Authentication Logic
-    const savedUserData = localStorage.getItem('kitsuneMockUser');
-    if (savedUserData) {
-      const savedUser = JSON.parse(savedUserData);
-      if (savedUser.email === email && savedUser.password === password) {
+      if (response.data.success) {
+        const { accessToken, refreshToken, user } = response.data.data;
+        
+        // Simpan token untuk integrasi API selanjutnya
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('userData', JSON.stringify(user));
+        
+        alert("Login Berhasil! Selamat datang kembali.");
         setErrors({});
         setIsLoggedIn(true);
         navigate('/');
-        return;
       }
+    } catch (error) {
+      console.error("Login Error:", error);
+      const message = error.response?.data?.message || "Email atau password salah";
+      setErrors({ email: message, password: message });
     }
-
-    // Jika tidak ada data atau tidak cocok
-    setErrors({ email: "Email atau password salah", password: "Email atau password salah" });
   };
 
   return (

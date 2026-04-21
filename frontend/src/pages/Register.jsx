@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import axiosInstance from '../api/axiosInstance';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function Register() {
     return regex.test(pass);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const newErrors = {};
     if (!username.trim()) newErrors.username = "Nama pengguna tidak boleh kosong";
     
@@ -47,12 +48,23 @@ export default function Register() {
       return;
     }
 
-    // Simpan data pendaftaran sementara di localStorage untuk digunakan di halaman Login
-    localStorage.setItem('kitsuneMockUser', JSON.stringify({ email, password, username }));
+    try {
+      const response = await axiosInstance.post('/api/v1/auth/register', {
+        name: username,
+        email,
+        password
+      });
 
-    // Jika sukses
-    setErrors({});
-    navigate('/login');
+      if (response.data.success) {
+        alert("Registrasi Berhasil! Silakan login untuk melanjutkan.");
+        setErrors({});
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error("Register Error:", error);
+      const message = error.response?.data?.message || "Registrasi gagal. Email mungkin sudah terdaftar.";
+      setErrors({ email: message });
+    }
   };
 
   return (
