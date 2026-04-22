@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useCart } from '../contexts/CartContext';
+import { Search } from 'lucide-react';
 
 const mangaDatabases = [
   { id: 101, title: "Berserk - Deluxe Edition Vol 1", price: 450000, genre: "Dark Fantasy", image: "https://images.unsplash.com/photo-1544640808-32cb4fbad06e?q=80&w=600&auto=format&fit=crop", rating: 5, dateAdded: '2023-11-20' },
@@ -29,6 +30,7 @@ export default function Manga() {
   const { addToCart } = useCart();
   const [activeGenre, setActiveGenre] = useState('All');
   const [maxPrice, setMaxPrice] = useState(Infinity);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const genres = ['All', 'Dark Fantasy', 'Isekai', 'Action'];
 
@@ -36,6 +38,10 @@ export default function Manga() {
   const { newArrivals, topManga } = useMemo(() => {
     let baseFiltered = mangaDatabases;
     
+    if (searchQuery.trim() !== '') {
+      baseFiltered = baseFiltered.filter(m => m.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+
     if (activeGenre !== 'All') {
       baseFiltered = baseFiltered.filter(m => m.genre === activeGenre);
     }
@@ -49,7 +55,7 @@ export default function Manga() {
     const topMangaList = [...baseFiltered].sort((a, b) => b.rating - a.rating || b.price - a.price).slice(0, 8);
 
     return { newArrivals: newArrivalsList, topManga: topMangaList };
-  }, [activeGenre, maxPrice]);
+  }, [activeGenre, maxPrice, searchQuery]);
 
   const renderProductGrid = (mangas) => {
     if (mangas.length === 0) {
@@ -117,6 +123,24 @@ export default function Manga() {
         {/* Filter Sidebar */}
         <div className="filter-sidebar">
           
+          <div className="filter-group" style={{ marginBottom: '25px' }}>
+            <h3>Pencarian</h3>
+            <div style={{ position: 'relative', marginTop: '10px' }}>
+              <input 
+                type="text" 
+                placeholder="Cari manga..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%', padding: '10px 15px 10px 40px', borderRadius: '8px',
+                  border: '1px solid var(--border-color)', background: 'var(--card-bg)', color: '#fff',
+                  outline: 'none', boxSizing: 'border-box'
+                }}
+              />
+              <Search size={18} color="#a0a0b0" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+            </div>
+          </div>
+
           <div className="filter-group">
             <h3>Genre List</h3>
             <ul className="filter-list">

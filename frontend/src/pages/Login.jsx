@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import axiosInstance from '../api/axiosInstance';
+import { useModal } from '../contexts/ModalContext';
 
 export default function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
+  const { showModal } = useModal();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +20,18 @@ export default function Login({ setIsLoggedIn }) {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    // Hardcode Admin Bypass
+    if (email === 'admin' && password === 'password') {
+      const adminUser = { id: 0, name: 'Super Admin', email: 'admin@system', role: 'Admin' };
+      localStorage.setItem('userData', JSON.stringify(adminUser));
+      showModal("Login Admin Berhasil! Selamat datang di Panel Admin.", 'success', () => {
+        setErrors({});
+        setIsLoggedIn(true);
+        navigate('/admin');
+      });
       return;
     }
 
@@ -35,10 +49,11 @@ export default function Login({ setIsLoggedIn }) {
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('userData', JSON.stringify(user));
         
-        alert("Login Berhasil! Selamat datang kembali.");
-        setErrors({});
-        setIsLoggedIn(true);
-        navigate('/');
+        showModal("Login Berhasil! Selamat datang kembali.", 'success', () => {
+          setErrors({});
+          setIsLoggedIn(true);
+          navigate('/');
+        });
       }
     } catch (error) {
       console.error("Login Error:", error);

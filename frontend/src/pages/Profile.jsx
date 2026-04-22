@@ -3,11 +3,18 @@ import { User, Mail, MapPin, Phone, Package, Edit2, Check, X } from 'lucide-reac
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: ''
+  const [profileData, setProfileData] = useState(() => {
+    const savedUser = localStorage.getItem('userData');
+    if (savedUser) {
+      const parsed = JSON.parse(savedUser);
+      return {
+        name: parsed.name || '',
+        email: parsed.email || '',
+        phone: parsed.phone || '',
+        address: parsed.address || ''
+      };
+    }
+    return { name: '', email: '', phone: '', address: '' };
   });
 
   // Dummy order history, initially empty
@@ -19,7 +26,9 @@ export default function Profile() {
   };
 
   const handleSave = () => {
-    // Simulasi penyimpanan
+    const savedUser = JSON.parse(localStorage.getItem('userData') || '{}');
+    const updatedUser = { ...savedUser, ...profileData };
+    localStorage.setItem('userData', JSON.stringify(updatedUser));
     setIsEditing(false);
   };
 

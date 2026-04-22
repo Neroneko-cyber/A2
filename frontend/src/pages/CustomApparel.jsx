@@ -4,6 +4,7 @@ import { Rnd } from 'react-rnd';
 import { useCart } from '../contexts/CartContext';
 import { removeBackground } from '@imgly/background-removal';
 import { Loader2 } from 'lucide-react';
+import { useModal } from '../contexts/ModalContext';
 
 import bajuHitamDepan from '../assets/baju_hitam_depan.jpg';
 import bajuHitamBelakang from '../assets/baju_hitam_belakang.jpg';
@@ -33,6 +34,7 @@ export default function CustomApparel() {
   const [color, setColor] = useState('white'); // white | black
   const [size, setSize] = useState('L');
   const [view, setView] = useState('front'); // front | back
+  const { showModal } = useModal();
 
   // Image uploads base64 string
   const [frontImage, setFrontImage] = useState(null);
@@ -47,7 +49,7 @@ export default function CustomApparel() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert("Ukuran file maksimal 5MB");
+        showModal("Ukuran file maksimal 5MB", "error");
         return;
       }
       

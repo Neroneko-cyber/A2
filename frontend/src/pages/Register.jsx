@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import axiosInstance from '../api/axiosInstance';
+import { useModal } from '../contexts/ModalContext';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { showModal } = useModal();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +26,7 @@ export default function Register() {
   const handleRegister = async () => {
     const newErrors = {};
     if (!username.trim()) newErrors.username = "Nama pengguna tidak boleh kosong";
-    
+
     if (!email.trim()) {
       newErrors.email = "Email tidak boleh kosong";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -56,9 +58,10 @@ export default function Register() {
       });
 
       if (response.data.success) {
-        alert("Registrasi Berhasil! Silakan login untuk melanjutkan.");
-        setErrors({});
-        navigate('/login');
+        showModal("Registrasi Berhasil! Silakan login untuk melanjutkan.", 'success', () => {
+          setErrors({});
+          navigate('/login');
+        });
       }
     } catch (error) {
       console.error("Register Error:", error);
@@ -69,7 +72,7 @@ export default function Register() {
 
   return (
     <section className="container" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 0' }}>
-      <motion.div 
+      <motion.div
         className="form-container"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -92,15 +95,15 @@ export default function Register() {
           <span className="brand-font" style={{ fontSize: '1.8rem', textAlign: 'center', color: '#fff' }}>KITSUNE NOIR</span>
         </div>
         <h2 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '1.2rem', color: '#dc143c', fontWeight: '500' }}>Create an account</h2>
-        
+
         <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: '#a0a0b0' }}>Username</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Masukkan nama pengguna Anda" 
+              placeholder="Masukkan nama pengguna Anda"
               style={{
                 width: '100%',
                 padding: '12px 15px',
@@ -117,11 +120,11 @@ export default function Register() {
 
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: '#a0a0b0' }}>Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Masukkan email Anda" 
+              placeholder="Masukkan email Anda"
               style={{
                 width: '100%',
                 padding: '12px 15px',
@@ -135,12 +138,12 @@ export default function Register() {
             />
             {errors.email && <small style={{ color: '#dc143c', display: 'block', marginTop: '5px' }}>{errors.email}</small>}
           </div>
-          
+
           <div>
             <div style={{ position: 'relative' }}>
               <label style={{ display: 'block', marginBottom: '8px', color: '#a0a0b0' }}>Password</label>
-              <input 
-                type={showPassword ? "text" : "password"} 
+              <input
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -149,7 +152,7 @@ export default function Register() {
                     setErrors({ ...errors, password: '' });
                   }
                 }}
-                placeholder="Masukkan Password Anda" 
+                placeholder="Masukkan Password Anda"
                 style={{
                   width: '100%',
                   padding: '12px 40px 12px 15px',
@@ -184,7 +187,7 @@ export default function Register() {
               <small style={{ color: '#dc143c', display: 'block', marginTop: '6px' }}>{errors.password}</small>
             ) : (
               <small style={{ display: 'block', color: '#888', marginTop: '6px', fontSize: '0.8rem' }}>
-                * Masukkan 8-16 karakter, dengan minimal 1 huruf besar
+                * Masukkan 8-16 karakter, dengan minimal 1 huruf besar, 1 huruf kecil, dan 1 simbol
               </small>
             )}
           </div>
@@ -192,11 +195,11 @@ export default function Register() {
           <div>
             <div style={{ position: 'relative' }}>
               <label style={{ display: 'block', marginBottom: '8px', color: '#a0a0b0' }}>Confirmation Password</label>
-              <input 
-                type={showConfirmPassword ? "text" : "password"} 
+              <input
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Masukkan ulang password Anda" 
+                placeholder="Masukkan ulang password Anda"
                 style={{
                   width: '100%',
                   padding: '12px 40px 12px 15px',
@@ -230,7 +233,7 @@ export default function Register() {
             {errors.confirmPassword && <small style={{ color: '#dc143c', display: 'block', marginTop: '6px' }}>{errors.confirmPassword}</small>}
           </div>
 
-          <button 
+          <button
             type="button"
             onClick={handleRegister}
             className="nav-btn primary"
