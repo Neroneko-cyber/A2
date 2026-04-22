@@ -24,6 +24,9 @@ export default function Footer() {
           </ul>
         </div>
       </div>
+      <div style={{ textAlign: 'center', padding: '20px 0', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '30px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+        &copy; {new Date().getFullYear()} Kitsune Noir E-Commerce. All rights reserved.
+      </div>
     </footer>
   );
 }

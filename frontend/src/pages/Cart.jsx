@@ -75,9 +75,9 @@ export default function Cart() {
               <span style={{ color: 'var(--accent-crimson)' }}>Rp {total.toLocaleString('id-ID')}</span>
             </div>
             <hr style={{ borderColor: 'rgba(255,255,255,0.1)', marginBottom: '20px' }} />
-            <button className="nav-btn primary" style={{ width: '100%', padding: '15px', fontSize: '1.1rem', textAlign: 'center', border: 'none', cursor: 'pointer' }}>
+            <Link to="/checkout" className="nav-btn primary" style={{ display: 'block', width: '100%', padding: '15px', fontSize: '1.1rem', textAlign: 'center', border: 'none', cursor: 'pointer', textDecoration: 'none' }}>
               Checkout Sekarang
-            </button>
+            </Link>
           </div>
         </div>
       )}

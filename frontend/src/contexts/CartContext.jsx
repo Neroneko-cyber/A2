@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useModal } from './ModalContext';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
+  const { showModal } = useModal();
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('kitsune_cart');
     return savedCart ? JSON.parse(savedCart) : [];
@@ -18,7 +20,7 @@ export function CartProvider({ children }) {
     setCart((prevCart) => [...prevCart, newItem]);
     
     // Memberikan feedback instan sederhana ke user
-    alert(`Berhasil menambahkan ${item.name} ke keranjang!`);
+    showModal(`Berhasil menambahkan ${item.name} ke keranjang!`, 'success');
   };
 
   const removeFromCart = (cartId) => {
