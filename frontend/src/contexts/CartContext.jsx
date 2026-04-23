@@ -18,7 +18,7 @@ export function CartProvider({ children }) {
     // Memberikan ID unik pada setiap barang custom agar tidak ter-stack
     const newItem = { ...item, cartId: Date.now().toString() };
     setCart((prevCart) => [...prevCart, newItem]);
-    
+
     // Memberikan feedback instan sederhana ke user
     showModal(`Berhasil menambahkan ${item.name} ke keranjang!`, 'success');
   };
