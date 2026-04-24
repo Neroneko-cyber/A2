@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         // ─── Public (Tanpa Auth) ─────────────────────────────
-                        .requestMatchers("/", "/error").permitAll()
+                        .requestMatchers("/", "/error", "/uploads/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/discounts/**").permitAll()
@@ -81,8 +81,7 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList(
                 "Authorization", "Cache-Control", "Content-Type",
                 "X-Requested-With", "Accept", "Origin",
-                "X-Guest-ID"
-        ));
+                "X-Guest-ID"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "X-Guest-ID"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L); // Cache preflight 1 jam

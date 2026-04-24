@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         Path path = Paths.get(uploadDir);
         String absolutePath = path.toFile().getAbsolutePath();
-        
+
         // Memetakan URL /uploads/** ke folder fisik
         registry.addResourceHandler("/" + uploadDir + "/**")
                 .addResourceLocations("file:/" + absolutePath + "/");
