@@ -80,9 +80,10 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList(
                 "Authorization", "Cache-Control", "Content-Type",
-                "X-Requested-With", "Accept", "Origin"
+                "X-Requested-With", "Accept", "Origin",
+                "X-Guest-ID"
         ));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "X-Guest-ID"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L); // Cache preflight 1 jam
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

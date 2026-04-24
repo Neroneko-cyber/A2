@@ -27,6 +27,18 @@ public class CartItem {
     @Column(name = "Quantity", nullable = false)
     private Integer quantity = 1;
 
+    @Column(name = "Name", nullable = false)
+    private String name;
+
+    @Column(name = "Price", nullable = false, precision = 18, scale = 2)
+    private java.math.BigDecimal price;
+
+    @Column(name = "ImageURL")
+    private String imageUrl;
+
+    @Column(name = "Details")
+    private String details;
+
     @Column(name = "CreatedAt")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -43,6 +55,14 @@ public class CartItem {
     public void setCustomOrder(CustomOrder customOrder) { this.customOrder = customOrder; }
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public java.math.BigDecimal getPrice() { return price; }
+    public void setPrice(java.math.BigDecimal price) { this.price = price; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getDetails() { return details; }
+    public void setDetails(String details) { this.details = details; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

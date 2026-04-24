@@ -60,6 +60,8 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order.setTotalAmount(BigDecimal.ZERO);
         order.setFinalAmount(BigDecimal.ZERO);
+        order.setShippingAddress(request.getShippingAddress());
+        order.setCourierName(request.getCourierName());
 
         // Simpan order dahulu untuk mendapatkan ID
         order = orderRepository.save(order);

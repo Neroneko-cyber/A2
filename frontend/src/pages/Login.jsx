@@ -43,6 +43,33 @@ export default function Login({ setIsLoggedIn }) {
           ? "Login Admin Berhasil! Selamat datang di Panel Admin."
           : "Login Berhasil! Selamat datang kembali.";
 
+        // Sync Guest Cart to User Cart
+        try {
+            const guestId = localStorage.getItem('guest_id');
+            if (guestId) {
+                const guestCartRes = await axiosInstance.get('/api/v1/cart/guest', {
+                    headers: { 'X-Guest-ID': guestId }
+                });
+                const guestItems = guestCartRes.data?.data || [];
+                if (guestItems.length > 0) {
+                    const syncData = guestItems.map(item => ({
+                        productId: item.productId,
+                        customOrderId: item.customOrderId,
+                        quantity: item.quantity
+                    }));
+                    await axiosInstance.post('/api/v1/cart/sync', { items: syncData }, {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    });
+                    // Clear guest cart after sync
+                    await axiosInstance.delete('/api/v1/cart/guest', {
+                        headers: { 'X-Guest-ID': guestId }
+                    });
+                }
+            }
+        } catch (syncError) {
+            console.error('Failed to sync cart:', syncError);
+        }
+
         showModal(welcomeMsg, 'success', () => {
           setErrors({});
           setIsLoggedIn(true);

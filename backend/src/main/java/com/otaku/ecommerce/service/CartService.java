@@ -171,10 +171,18 @@ public class CartService {
                 Product product = productRepository.findById(request.getProductId())
                         .orElseThrow(() -> new CustomBusinessException("OTK-4044", "Produk tidak ditemukan", 404));
                 item.setProduct(product);
+                item.setName(product.getName());
+                item.setPrice(product.getPrice());
+                item.setImageUrl(product.getImageUrl());
+                item.setDetails(product.getCategory());
             } else if (request.getCustomOrderId() != null) {
                 CustomOrder customOrder = customOrderRepository.findById(request.getCustomOrderId())
                         .orElseThrow(() -> new CustomBusinessException("OTK-4045", "Custom order tidak ditemukan", 404));
                 item.setCustomOrder(customOrder);
+                item.setName(customOrder.getServiceType() + " Custom");
+                item.setPrice(customOrder.getPrice() != null ? customOrder.getPrice() : java.math.BigDecimal.ZERO);
+                item.setImageUrl(customOrder.getImageReferenceUrl());
+                item.setDetails("Custom order configuration");
             }
             cartItemRepository.save(item);
         }
@@ -236,18 +244,15 @@ public class CartService {
         dto.setQuantity(item.getQuantity());
         dto.setAddedAt(item.getCreatedAt());
 
+        dto.setName(item.getName());
+        dto.setPrice(item.getPrice());
+        dto.setImageUrl(item.getImageUrl());
+        dto.setDetails(item.getDetails());
+
         if (item.getProduct() != null) {
             dto.setProductId(item.getProduct().getId());
-            dto.setName(item.getProduct().getName());
-            dto.setPrice(item.getProduct().getPrice());
-            dto.setImageUrl(item.getProduct().getImageUrl());
-            dto.setDetails(item.getProduct().getCategory());
         } else if (item.getCustomOrder() != null) {
             dto.setCustomOrderId(item.getCustomOrder().getId());
-            dto.setName(item.getCustomOrder().getServiceType() + " Custom");
-            dto.setPrice(item.getCustomOrder().getPrice() != null ? item.getCustomOrder().getPrice() : java.math.BigDecimal.ZERO);
-            dto.setImageUrl(item.getCustomOrder().getImageReferenceUrl());
-            dto.setDetails("Custom order configuration");
         }
         return dto;
     }
