@@ -184,22 +184,32 @@ public class OrderService {
     // ─── Update Status Order (Admin, dengan validasi transisi) ───────────────
     @Transactional
     public void updateOrderStatus(Integer orderId, String newStatus) {
+        updateOrderDetails(orderId, newStatus, null, null);
+    }
+
+    @Transactional
+    public void updateOrderDetails(Integer orderId, String status, String courierCode, String trackingNumber) {
         if (orderId == null) throw new CustomBusinessException("OTK-4010", "ID tidak boleh kosong", 400);
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomBusinessException("OTK-4042", "Order tidak ditemukan", 404));
 
-        List<String> allowed = VALID_TRANSITIONS.getOrDefault(order.getStatus(), List.of());
-        if (!allowed.contains(newStatus)) {
-            throw new CustomBusinessException("OTK-4091",
-                "Status tidak bisa diubah dari '" + order.getStatus() + "' ke '" + newStatus + "'", 400);
+        if (status != null && !status.isEmpty()) {
+            List<String> allowed = VALID_TRANSITIONS.getOrDefault(order.getStatus(), List.of());
+            if (!allowed.contains(status)) {
+                throw new CustomBusinessException("OTK-4091",
+                    "Status tidak bisa diubah dari '" + order.getStatus() + "' ke '" + status + "'", 400);
+            }
+            order.setStatus(status);
+            addTrackingHistory(orderId, status, "Status pesanan diperbarui menjadi: " + status);
         }
-        order.setStatus(newStatus);
+
+        if (courierCode != null) order.setCourierCode(courierCode);
+        if (trackingNumber != null) order.setTrackingNumber(trackingNumber);
+
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
         
-        addTrackingHistory(orderId, newStatus, "Status pesanan diperbarui menjadi: " + newStatus);
-        
-        log.info("[ORDER-STATUS] Order {} diubah ke status {}", orderId, newStatus);
+        log.info("[ORDER-UPDATE] Order {} updated: status={}, resi={}", orderId, status, trackingNumber);
     }
 
     // ─── Order Tracking ───────────────────────────────────────────────────────

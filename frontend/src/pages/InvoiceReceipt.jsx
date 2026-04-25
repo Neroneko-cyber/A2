@@ -85,27 +85,35 @@ export default function InvoiceReceipt() {
     window.print();
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     // For demo purposes, we assign a dummy resi
-    const dummyResi = "JP8512345678"; // Example J&T Resi
+    const dummyResi = "MOCK123"; // Use MOCK123 for testing
     const dummyCourier = "jnt";
 
-    showModal(`Pembayaran sebesar Rp ${invoice.summary.total.toLocaleString('id-ID')} menggunakan ${paymentMethod} berhasil diproses!`, 'success', () => {
-      setInvoice(prev => ({ ...prev, status: 'LUNAS', paymentMethod, trackingNumber: dummyResi, courierCode: dummyCourier }));
-      
-      // Update global orders (local fallback)
-      const savedOrders = JSON.parse(localStorage.getItem('kitsune_orders') || '[]');
-      const updatedOrders = savedOrders.map(o => 
-        o.invoiceId === invoice.invoiceId ? { ...o, status: 'LUNAS', paymentMethod, trackingNumber: dummyResi, courierCode: dummyCourier } : o
-      );
-      localStorage.setItem('kitsune_orders', JSON.stringify(updatedOrders));
+    try {
+      // 1. Sync with backend
+      await axiosInstance.patch(`/api/v1/orders/${invoice.orderId}/status`, null, {
+        params: {
+          status: 'Processing',
+          courierCode: dummyCourier,
+          trackingNumber: dummyResi
+        }
+      });
 
-      clearCart();
-    });
+      showModal(`Pembayaran sebesar Rp ${invoice.summary.total.toLocaleString('id-ID')} menggunakan ${paymentMethod} berhasil diproses!`, 'success', () => {
+        setInvoice(prev => ({ ...prev, status: 'LUNAS', paymentMethod, trackingNumber: dummyResi, courierCode: dummyCourier }));
+        
+        clearCart();
+      });
+    } catch (error) {
+      console.error("Payment sync error:", error);
+      showModal("Gagal sinkronisasi pembayaran ke server.", "error");
+    }
   };
 
   const fetchTracking = async () => {
-    if (!invoice.trackingNumber || !invoice.courierCode) {
+    if (!invoice.trackingNumber || invoice.trackingNumber === "" || invoice.trackingNumber === "null") {
+      showModal("Mohon maaf nomor resi belum ada, mohon ditunggu", "info");
       return;
     }
 
@@ -116,12 +124,13 @@ export default function InvoiceReceipt() {
       if (response.data.success) {
         setTrackingData(response.data.data.data);
       } else {
-        showModal(response.data.message || "Gagal melacak paket", "error");
+        showModal(response.data.message || "Gagal melacak paket. Pastikan nomor resi valid.", "error");
         setShowTracking(false);
       }
     } catch (error) {
       console.error("Tracking fetch error:", error);
-      showModal("Terjadi kesalahan saat menghubungi server tracking.", "error");
+      const errorMsg = error.response?.data?.message || "Terjadi kesalahan saat menghubungi server tracking.";
+      showModal(errorMsg, "error");
       setShowTracking(false);
     } finally {
       setLoadingTracking(false);
