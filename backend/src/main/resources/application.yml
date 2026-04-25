@@ -79,4 +79,7 @@ storage:
   outfit-dir: ${storage.upload-dir}/outfits
   figure-dir: ${storage.upload-dir}/figures
 
-
+# ─── BinderByte Tracking API ────────────────────────────────────────────────
+binderbyte:
+  api-key: ce8138be2864572d8049d35839fe1cf66a26faf74a5859c96a0cd57d678c2c6d
+  base-url: https://api.binderbyte.com/v1
