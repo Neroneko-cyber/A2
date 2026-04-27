@@ -2,9 +2,9 @@ package com.otaku.ecommerce.service;
 
 import com.otaku.ecommerce.dto.ShippingAreaDTO;
 import com.otaku.ecommerce.dto.ShippingRateDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.Map;
 @Service
 public class ShippingService {
 
-<<<<<<< Updated upstream
     @Value("${binderbyte.api-key}")
     private String apiKey;
 
@@ -29,12 +28,14 @@ public class ShippingService {
         this.restTemplate = restTemplate;
     }
 
-=======
->>>>>>> Stashed changes
     // ─── Pencarian Area Kota ──────────────────────────────────────────────────
     public ShippingAreaDTO searchAreas(String query) {
         ShippingAreaDTO result = new ShippingAreaDTO();
         result.setSuccess(true);
+
+        if (query == null || query.isBlank()) {
+            return result;
+        }
 
         // {id, kecamatan, kota, provinsi, kode_pos}
         String[][] areaData = {
@@ -94,14 +95,14 @@ public class ShippingService {
             if (d[1].toLowerCase().contains(q)
                     || d[2].toLowerCase().contains(q)
                     || d[3].toLowerCase().contains(q)) {
-                ShippingAreaDTO.Area area = new ShippingAreaDTO.Area();
-                area.setId(d[0]);
-                area.setName(fullName);
-                area.setDistrict(d[1]);
-                area.setCity(d[2]);
-                area.setProvince(d[3]);
-                area.setPostalCode(d[4]);
-                areas.add(area);
+                ShippingAreaDTO.Area a = new ShippingAreaDTO.Area();
+                a.setId(d[0]);
+                a.setDistrict(d[1]);
+                a.setCity(d[2]);
+                a.setProvince(d[3]);
+                a.setPostalCode(d[4]);
+                a.setName(fullName);
+                areas.add(a);
             }
         }
 
@@ -110,7 +111,6 @@ public class ShippingService {
     }
 
     // ─── Kalkulasi Tarif Pengiriman ───────────────────────────────────────────
-<<<<<<< Updated upstream
     @SuppressWarnings("unchecked")
     public ShippingRateDTO getShippingCost(String destination, int weightGram, String courierFilter) {
         ShippingRateDTO result = new ShippingRateDTO();
@@ -213,63 +213,6 @@ public class ShippingService {
             result.setMessage("Using simulated rates (API error: " + e.getMessage() + ")");
         }
         
-=======
-    public ShippingRateDTO getShippingCost(String destinationId, int weightGram, String courierFilter) {
-        ShippingRateDTO result = new ShippingRateDTO();
-        result.setSuccess(true);
-
-        // Harga dasar: Rp 9.000 per 500g (minimum 9.000)
-        int kg500 = (int) Math.max(1, Math.ceil((double) weightGram / 500));
-        long basePrice = kg500 * 9_000L;
-
-        // {kode, nama, nama_layanan, kode_layanan, multiplier, estimasi_hari}
-        Object[][] catalog = {
-            {"jne",      "JNE",           "JNE Reguler",        "REG",  1.00, "2-3"},
-            {"jne",      "JNE",           "JNE Oke",            "OKE",  0.80, "4-6"},
-            {"jne",      "JNE",           "JNE YES",            "YES",  2.20, "1"},
-            {"jnt",      "J&T Express",   "J&T Express",        "EZ",   1.05, "2-3"},
-            {"jnt",      "J&T Express",   "J&T Economy",        "EX",   0.88, "3-5"},
-            {"sicepat",  "SiCepat",       "SiCepat BEST",       "BEST", 1.00, "2-3"},
-            {"sicepat",  "SiCepat",       "SiCepat HALU",       "HALU", 2.10, "1"},
-            {"anteraja", "AnterAja",      "AnterAja Reguler",   "REG",  1.00, "2-4"},
-            {"anteraja", "AnterAja",      "AnterAja Next Day",  "ND",   1.80, "1"},
-            {"pos",      "POS Indonesia", "POS Kilat Khusus",   "SKH",  0.90, "3-5"},
-            {"pos",      "POS Indonesia", "POS Express Semalam","EXS",  2.00, "1"},
-        };
-
-        String filter = (courierFilter != null) ? courierFilter.toLowerCase().trim() : "";
-        List<ShippingRateDTO.CourierOption> options = new ArrayList<>();
-
-        for (Object[] r : catalog) {
-            String code = (String) r[0];
-            if (!filter.isBlank() && !code.equals(filter)) continue;
-
-            ShippingRateDTO.CourierOption opt = new ShippingRateDTO.CourierOption();
-            opt.setCourierCode(code);
-            opt.setCourierName((String) r[1]);
-            opt.setServiceName((String) r[2]);
-            opt.setServiceCode((String) r[3]);
-            opt.setPrice(Math.round(basePrice * (Double) r[4]));
-            opt.setEstimatedDay((String) r[5]);
-            options.add(opt);
-        }
-
-        // Jika filter tidak cocok dengan kurir manapun, tampilkan semua
-        if (options.isEmpty()) {
-            for (Object[] r : catalog) {
-                ShippingRateDTO.CourierOption opt = new ShippingRateDTO.CourierOption();
-                opt.setCourierCode((String) r[0]);
-                opt.setCourierName((String) r[1]);
-                opt.setServiceName((String) r[2]);
-                opt.setServiceCode((String) r[3]);
-                opt.setPrice(Math.round(basePrice * (Double) r[4]));
-                opt.setEstimatedDay((String) r[5]);
-                options.add(opt);
-            }
-        }
-
-        result.setCouriers(options);
->>>>>>> Stashed changes
         return result;
     }
 }
