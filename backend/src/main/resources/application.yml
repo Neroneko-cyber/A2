@@ -81,7 +81,11 @@ storage:
 
 # ─── BinderByte Tracking API (untuk TrackingService) ────────────────────────
 binderbyte:
+<<<<<<< Updated upstream
   api-key: ${BINDERBYTE_API_KEY}
+=======
+  api-key: ${BINDERBYTE_API_KEY:f3f50808a3d132b354dfa4ebf2c5d1752bca7e025f187a51206bd4199c4bd9cc}
+>>>>>>> Stashed changes
   base-url: https://api.binderbyte.com/v1
   origin: ${SHIPPING_ORIGIN:jakarta utara}
 
