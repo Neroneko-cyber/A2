@@ -175,7 +175,7 @@ export default function Checkout() {
         items: [...cart],
         summary: { subtotal, ppn, shipping: shippingFee, total: grandTotal },
         paymentMethod: 'Bank Transfer',
-        courier: `${formData.courier.toUpperCase()} - ${selectedOption.service}`,
+        courier: `${formData.courier.toUpperCase()} - ${selectedOption.serviceName}`,
         status: 'UNPAID',
         paymentUrl: paymentData.paymentUrl
       };

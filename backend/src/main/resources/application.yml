@@ -81,5 +81,5 @@ storage:
 
 # ─── BinderByte Tracking API (untuk TrackingService) ────────────────────────
 binderbyte:
-  api-key: ${BINDERBYTE_API_KEY:f3f50808a3d132b354dfa4ebf2c5d1752bca7e025f187a51206bd4199c4bd9cc}
+  api-key: ${BINDERBYTE_API_KEY:ce8138be2864572d8049d35839fe1cf66a26faf74a5859c96a0cd57d678c2c6d}
   base-url: https://api.binderbyte.com/v1
