@@ -20,14 +20,14 @@ export default function Checkout() {
     address: '',
     courier: 'jne'
   });
-  
+
   // Shipping States
   const [cities, setCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [citySearch, setCitySearch] = useState('');
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [selectedCity, setSelectedCity] = useState(null);
-  
+
   const [shippingOptions, setShippingOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
@@ -174,13 +174,8 @@ export default function Checkout() {
         customer: { name: formData.name, email: formData.email, address: fullAddress },
         items: [...cart],
         summary: { subtotal, ppn, shipping: shippingFee, total: grandTotal },
-<<<<<<< Updated upstream
         paymentMethod: 'Xendit (VA, E-Wallet, Retail)',
         courier: `${formData.courier.toUpperCase()} - ${selectedOption.serviceName}`,
-=======
-        paymentMethod: 'Bank Transfer',
-        courier: `${formData.courier.toUpperCase()} - ${selectedOption.service}`,
->>>>>>> Stashed changes
         status: 'UNPAID',
         paymentUrl: paymentData.paymentUrl
       };
@@ -227,33 +222,33 @@ export default function Checkout() {
 
             <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', marginTop: '30px', display: 'flex', alignItems: 'center', gap: '8px' }}><MapPin size={20} color="#dc143c" /> Alamat Pengiriman</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
-              
+
               {/* City Selector */}
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', marginBottom: '8px', color: '#a0a0b0', fontSize: '0.9rem' }}>Pilih Kota</label>
-                <div 
+                <div
                   onClick={() => setShowCityDropdown(!showCityDropdown)}
-                  style={{ 
-                    padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid #444', color: selectedCity ? '#fff' : '#888', 
-                    borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' 
+                  style={{
+                    padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid #444', color: selectedCity ? '#fff' : '#888',
+                    borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                   }}
                 >
                   {selectedCity ? selectedCity.name : 'Cari Kota...'}
                   <ChevronDown size={18} />
                 </div>
-                
+
                 <AnimatePresence>
                   {showCityDropdown && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                      style={{ 
-                        position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100, 
-                        background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', 
-                        marginTop: '5px', maxHeight: '250px', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' 
+                      style={{
+                        position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100,
+                        background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px',
+                        marginTop: '5px', maxHeight: '250px', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
                       }}
                     >
-                      <input 
-                        type="text" autoFocus placeholder="Ketik min. 3 huruf nama kota/kecamatan..." 
+                      <input
+                        type="text" autoFocus placeholder="Ketik min. 3 huruf nama kota/kecamatan..."
                         value={citySearch} onChange={(e) => setCitySearch(e.target.value)}
                         style={{ width: '100%', padding: '10px', background: 'transparent', border: 'none', borderBottom: '1px solid #333', color: '#fff' }}
                       />
@@ -265,8 +260,8 @@ export default function Checkout() {
                         <div style={{ padding: '12px', color: '#555', fontSize: '0.85rem', textAlign: 'center' }}>Kota tidak ditemukan. Coba kata kunci lain.</div>
                       ) : (
                         filteredCities.map(city => (
-                          <div 
-                            key={city.id} 
+                          <div
+                            key={city.id}
                             onClick={() => { setSelectedCity(city); setShowCityDropdown(false); setCitySearch(''); }}
                             style={{ padding: '10px', cursor: 'pointer', transition: '0.2s', background: selectedCity?.id === city.id ? '#333' : 'transparent', fontSize: '0.875rem', lineHeight: '1.4' }}
                             onMouseEnter={(e) => e.currentTarget.style.background = '#222'}
@@ -293,7 +288,7 @@ export default function Checkout() {
                     <button
                       key={c} type="button"
                       onClick={() => setFormData(prev => ({ ...prev, courier: c }))}
-                      style={{ 
+                      style={{
                         flex: '1 1 120px', padding: '12px', borderRadius: '8px', border: formData.courier === c ? '1px solid #dc143c' : '1px solid #333',
                         background: formData.courier === c ? 'rgba(220, 20, 60, 0.1)' : 'rgba(0,0,0,0.2)',
                         color: formData.courier === c ? '#dc143c' : '#888', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem'
@@ -316,10 +311,10 @@ export default function Checkout() {
               ) : selectedCity ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {shippingOptions.length > 0 ? shippingOptions.map((opt, i) => (
-                    <div 
-                      key={i} 
+                    <div
+                      key={i}
                       onClick={() => setSelectedOption(opt)}
-                      style={{ 
+                      style={{
                         padding: '15px', borderRadius: '10px',
                         border: selectedOption?.serviceCode === opt.serviceCode && selectedOption?.courierCode === opt.courierCode ? '1px solid #2ecc71' : '1px solid #333',
                         background: 'rgba(255,255,255,0.02)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
@@ -369,7 +364,7 @@ export default function Checkout() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: 'var(--text-muted)' }}>
               <span>Total Berat</span>
-              <span>{(totalWeight/1000).toFixed(1)} Kg</span>
+              <span>{(totalWeight / 1000).toFixed(1)} Kg</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: 'var(--text-muted)' }}>
               <span>Subtotal Produk</span>

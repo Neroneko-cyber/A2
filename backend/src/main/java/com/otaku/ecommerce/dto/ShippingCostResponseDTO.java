@@ -8,8 +8,21 @@ public class ShippingCostResponseDTO {
     private Data data;
 
     public static class Data {
+        private List<Result> results;
+
+        public List<Result> getResults() { return results; }
+        public void setResults(List<Result> results) { this.results = results; }
+    }
+
+    public static class Result {
+        private String code;
+        private String name;
         private List<CostDetail> costs;
 
+        public String getCode() { return code; }
+        public void setCode(String code) { this.code = code; }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
         public List<CostDetail> getCosts() { return costs; }
         public void setCosts(List<CostDetail> costs) { this.costs = costs; }
     }
